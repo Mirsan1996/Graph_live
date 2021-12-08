@@ -18,7 +18,7 @@ class GraphConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
 
-        for i in range(30):
+        for i in range(115):
             numero = 2040
             user = "iot" + str(numero)
 
@@ -30,11 +30,17 @@ class GraphConsumer(AsyncWebsocketConsumer):
             )
             cur = mydb.cursor()
             cur.execute("SELECT numero FROM database_numero ORDER BY id DESC LIMIT 20;")
-            valor = [i[0] for i in cur.fetchall()]
+            presion = [i[0] for i in cur.fetchall()]
             cur.execute("SELECT fecha FROM database_numero ORDER BY id DESC LIMIT 2;")
             fecha= [i[0] for i in cur.fetchall()]
             fecha2= str(fecha[0])
-            var=[valor,fecha2]
+
+            cur.execute("SELECT numero FROM database_numero1 ORDER BY id DESC LIMIT 20;")
+            voltaje = [i[0] for i in cur.fetchall()]
+            cur.execute("SELECT numero FROM database_numero2 ORDER BY id DESC LIMIT 20;")
+            corriente = [i[0] for i in cur.fetchall()]
+
+            var = [presion, fecha2, voltaje, corriente]
             await self.send(json.dumps({'value': var}))
             await sleep(0.001)
 
@@ -48,10 +54,16 @@ class GraphConsumer(AsyncWebsocketConsumer):
             )
             cur = mydb.cursor()
             cur.execute("SELECT numero FROM database_numero ORDER BY id DESC LIMIT 20;")
-            valor = [i[0] for i in cur.fetchall()]
+            presion = [i[0] for i in cur.fetchall()]
             cur.execute("SELECT fecha FROM database_numero ORDER BY id DESC LIMIT 2;")
             fecha = [i[0] for i in cur.fetchall()]
             fecha2 = str(fecha[0])
-            var = [valor, fecha2]
+
+            cur.execute("SELECT numero FROM database_numero1 ORDER BY id DESC LIMIT 20;")
+            voltaje = [i[0] for i in cur.fetchall()]
+            cur.execute("SELECT numero FROM database_numero2 ORDER BY id DESC LIMIT 20;")
+            corriente = [i[0] for i in cur.fetchall()]
+
+            var = [presion, fecha2, voltaje, corriente]
             await self.send(json.dumps({'value': var}))
-            await sleep(1)
+            await sleep(0.4)
